@@ -33,7 +33,7 @@ async def sync(ctx,guild=None):
         await bot.tree.sync()
     else:
         await bot.tree.sync(guild=discord.Object(id=int(guild)))
-    await ctx.send("**Sincronizado!** Se você chegou até aqui, dá uma força para a gente se inscrevendo no YouTube!",view=SubButton())
+    await ctx.send("**Sincronizado!**",view=SubButton())
 
 async def main():
     async with bot:
