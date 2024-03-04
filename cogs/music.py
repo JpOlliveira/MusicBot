@@ -75,7 +75,7 @@ class music(commands.Cog):
     @app_commands.command(name="ajuda",description="Mostre um comando de ajuda.")
     async def help(self,interaction:discord.Interaction):
         await interaction.response.defer(thinking=True)
-        helptxt = "`/ajuda` - Veja esse guia!\n`/play` - Toque uma música do YouTube!\n`/fila` - Veja a fila de músicas na Playlist\n`/pular` - Pule para a próxima música da fila"
+        helptxt = "`/ajuda` - Veja esse guia!\n`/play` - Toque uma música do YouTube!\n`/fila` - Veja a fila de músicas na Playlist\n`/pular` - Pule para a próxima música da fila\n`/pausar` - Pause a musica em reprodução\n`/retomar` - Retome a musica pausada."
         embedhelp = discord.Embed(
             colour = 1646116,#grey
             title=f'Comandos do {self.client.user.name}',
@@ -171,6 +171,40 @@ class music(commands.Cog):
             await interaction.followup.send(embed=embedvc)     
         else:
             raise error
+
+    @app_commands.command(name="pausar", description="Pausa a música que está tocando.")
+    async def pausar(self, interaction: discord.Interaction):
+        await interaction.response.defer(thinking=True)
+        if self.vc != "" and self.vc.is_playing():
+            self.vc.pause()
+            embedvc = discord.Embed(
+                colour=1646116,  # Cinza
+                description=f"A música foi pausada."
+            )
+            await interaction.followup.send(embed=embedvc)
+        else:
+            embedvc = discord.Embed(
+                colour=12255232,  # Vermelho
+                description="Não há nenhuma música tocando no momento."
+            )
+            await interaction.followup.send(embed=embedvc)
+
+    @app_commands.command(name="retomar", description="Retoma a música que foi pausada.")
+    async def retomar(self, interaction: discord.Interaction):
+        await interaction.response.defer(thinking=True)
+        if self.vc and self.vc.is_paused():
+            self.vc.resume()
+            embedvc = discord.Embed(
+                colour=1646116,  # Cinza
+                description=f"A música foi retomada."
+            )
+            await interaction.followup.send(embed=embedvc)
+        else:
+            embedvc = discord.Embed(
+                colour=12255232,  # Vermelho
+                description="Não há nenhuma música pausada no momento."
+            )
+            await interaction.followup.send(embed=embedvc)
 
 async def setup(client):
     await client.add_cog(music(client))
